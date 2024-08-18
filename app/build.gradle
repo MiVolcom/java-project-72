@@ -4,6 +4,7 @@ plugins {
     id 'jacoco'
     id 'com.adarshr.test-logger' version '3.2.0'
     id 'com.github.ben-manes.versions' version '0.39.0'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 group = 'hexlet.code'
@@ -18,8 +19,15 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.0'
-    compileOnly 'org.projectlombok:lombok-maven-plugin:1.18.20.0'
+    compileOnly ("org.projectlombok:lombok:1.18.30")
+    annotationProcessor ("org.projectlombok:lombok:1.18.30")
     testImplementation 'org.assertj:assertj-core:3.22.0'
+    implementation("io.javalin:javalin:6.2.0")
+    implementation("org.slf4j:slf4j-simple:2.0.7")
+    implementation("com.h2database:h2:2.2.220")
+    implementation("com.zaxxer:HikariCP:5.0.1")
+    implementation("io.javalin:javalin-rendering:6.1.3")
+    implementation("gg.jte:jte:3.1.9")
 }
 
 test {
