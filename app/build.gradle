@@ -19,6 +19,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation group: 'io.javalin', name: 'javalin-testtools', version: '6.3.0'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.26.3'
+    testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '4.12.0'
+
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.0'
