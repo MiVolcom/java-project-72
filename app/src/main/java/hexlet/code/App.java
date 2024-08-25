@@ -53,7 +53,7 @@ public class App {
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
 
-        app.get("/", ctx -> ctx.render("index.jte"));
+        app.get("/", ctx -> ctx.render("jte/index.jte"));
         return app;
     }
 }
