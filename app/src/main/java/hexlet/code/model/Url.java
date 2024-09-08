@@ -10,9 +10,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 public class Url {
-    private Integer id;
+    private Long id;
     private String name;
     private LocalDateTime createdAt;
+
+    public Url(String name) {
+        this.name = name;
+    }
 }
+
