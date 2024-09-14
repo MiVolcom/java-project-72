@@ -30,7 +30,7 @@ public class UrlsController {
         var url = UrlsRepository.find(id)
                 .orElseThrow(() -> new NotFoundResponse("Entity with id = " + id + " not found"));
         var page = new UrlPage(url);
-        ctx.render("jte/show.jte", model("page", page));
+        ctx.render("jte/url/show.jte", model("page", page));
     }
 
 
