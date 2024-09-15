@@ -1,21 +1,32 @@
 @import hexlet.code.dto.UrlsPage
+@import hexlet.code.util.NamedRoutes
 @param UrlsPage page
 
-@template.jte.layout.page(content =
-@`
-    <h1>Sites list</h1>
+@template.jte.layout.page( page = page,
+content = @`
+    <div class="container-lg mt-5">
+        <h1>Сайты</h1>
+        <table class="table table-bordered table-hover mt-3">
+            <thead>
+            <tr>
+                <th class="col-1">ID</th>
+                <th>Имя</th>
+            </tr>
+            </thead>
+            <tbody>
 
-    <a href="${"/"}">Add site</a>
-    @if(page.getUrls().isEmpty())
-        <p>Site list is empty</p>
-    @else
-        @for(var url : page.getUrls())
-            <div>
-                <h2>
-                    <a href= "${"/urls/" + url.getId()}"> ${url.getName()}</a>
-                </h2>
-            </div>
-        @endfor
-    @endif
+            @for(var url : page.getUrls())
+            <tr>
+                <td>
+                    ${url.getId()}
+                </td>
+                <td>
+                    <a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a>
+                </td>
+            </tr>
+            @endfor
+            </tbody>
+        </table>
+    </div>
 `
 )

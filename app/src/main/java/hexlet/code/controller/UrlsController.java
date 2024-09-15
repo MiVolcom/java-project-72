@@ -60,7 +60,7 @@ public class UrlsController {
             ctx.sessionAttribute("flashType", "warning");
         } else {
             UrlsRepository.save(newUrl);
-            ctx.sessionAttribute("flash", "Страница успешно добавлена");
+            ctx.sessionAttribute("flash", "Page successfully added");
             ctx.sessionAttribute("flashType", "success");
         }
         ctx.redirect(NamedRoutes.urlsPath());

@@ -23,7 +23,7 @@ public class UrlsRepository extends BaseRepository {
             // Устанавливаем ID в сохраненную сущность
             if (generatedKeys.next()) {
                 url.setId(generatedKeys.getLong(1));
-                url.setCreatedAt(createdAt);
+                url.setCreatedAt(Timestamp.valueOf(createdAt));
             } else {
                 throw new SQLException("DB have not returned an id after saving an entity");
             }
@@ -37,7 +37,7 @@ public class UrlsRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 var name = resultSet.getString("name");
-                var createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
+                var createdAt = resultSet.getTimestamp("created_at");
 
                 var url = new Url(name);
                 url.setId(id);
@@ -56,7 +56,7 @@ public class UrlsRepository extends BaseRepository {
             while (resultSet.next()) {
                 var id = resultSet.getLong("id");
                 var name = resultSet.getString("name");
-                var createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
+                var createdAt = resultSet.getTimestamp("created_at");
 
                 var url = new Url(name);
                 url.setId(id);
@@ -78,7 +78,7 @@ public class UrlsRepository extends BaseRepository {
                 var id = resultSet.getLong("id");
                 var url = new Url(name);
                 url.setId(id);
-                url.setCreatedAt(createdAt.toLocalDateTime());
+                url.setCreatedAt(createdAt);
 
                 return Optional.of(url);
             }

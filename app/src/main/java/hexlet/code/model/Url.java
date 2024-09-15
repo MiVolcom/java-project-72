@@ -3,15 +3,18 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @ToString
-public class Url {
+public final class Url {
+    @Setter
     private Long id;
+    @ToString.Include
     private String name;
-    private LocalDateTime createdAt;
+    @Setter
+    private Timestamp createdAt;
 
     public Url(String name) {
         this.name = name;

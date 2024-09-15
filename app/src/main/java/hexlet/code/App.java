@@ -7,6 +7,7 @@ import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
 import hexlet.code.controller.UrlsController;
 import hexlet.code.repository.BaseRepository;
+import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 import lombok.extern.slf4j.Slf4j;
@@ -68,9 +69,9 @@ public class App {
 
         app.get("/", ctx -> ctx.render("jte/index.jte"));
 
-        app.get("/urls", UrlsController::index);
-        app.get("/urls/{id}", UrlsController::show);
-        app.post("/urls", UrlsController::create);
+        app.get(NamedRoutes.urlsPath(), UrlsController::index);
+        app.get(NamedRoutes.urlPath("{id}"), UrlsController::show);
+        app.post(NamedRoutes.urlsPath(), UrlsController::create);
 
         return app;
     }
