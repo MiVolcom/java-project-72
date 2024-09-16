@@ -22,11 +22,12 @@ public class UrlsController {
         var urls = UrlsRepository.getEntities();
         var page = new UrlsPage(urls);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
+        page.setFlashType(ctx.consumeSessionAttribute("flashType"));
         ctx.render("jte/url/index.jte", model("page", page));
     }
 
     public static void show(Context ctx) throws SQLException {
-        var id = ctx.formParamAsClass("id", Long.class).get();
+        var id = ctx.pathParamAsClass("id", Long.class).get();
         var url = UrlsRepository.find(id)
                 .orElseThrow(() -> new NotFoundResponse("Entity with id = " + id + " not found"));
         var page = new UrlPage(url);
@@ -60,7 +61,7 @@ public class UrlsController {
             ctx.sessionAttribute("flashType", "warning");
         } else {
             UrlsRepository.save(newUrl);
-            ctx.sessionAttribute("flash", "Page successfully added");
+            ctx.sessionAttribute("flash", "Страница успешно добавлена");
             ctx.sessionAttribute("flashType", "success");
         }
         ctx.redirect(NamedRoutes.urlsPath());
