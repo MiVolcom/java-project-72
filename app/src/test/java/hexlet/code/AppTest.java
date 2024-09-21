@@ -46,7 +46,7 @@ public class AppTest {
     public void testUrlPage() throws SQLException {
         String input = "https://www.google.com";
         var url = new Url(input);
-        url.setCreatedAt(new Timestamp(new Date(2024/9/21).getTime()));
+        url.setCreatedAt(new Timestamp(new Date(2024 / 9 / 21).getTime()));
         UrlsRepository.save(url);
 
         JavalinTest.test(app, (server, client) -> {
@@ -64,7 +64,7 @@ public class AppTest {
     @Test
     public void testCreateUrls() {
         JavalinTest.test(app, (server, client) -> {
-            var requestBody = "https://www.google.com";
+            var requestBody = "url=https://www.google.com";
             var response = client.post(NamedRoutes.urlsPath(), requestBody);
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).contains("https://www.google.com");
