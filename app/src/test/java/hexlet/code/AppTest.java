@@ -1,16 +1,24 @@
 package hexlet.code;
 import hexlet.code.model.Url;
-import hexlet.code.repository.UrlsRepository;
+import hexlet.code.repository.UrlRepository;
 import hexlet.code.util.NamedRoutes;
+import hexlet.code.repository.UrlCheckRepository;
 import io.javalin.Javalin;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static hexlet.code.App.readResourceFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.javalin.testtools.JavalinTest;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -19,11 +27,26 @@ import java.util.Objects;
 
 public class AppTest {
 
-    Javalin app;
+    private static Javalin app;
+    private static MockWebServer mockServer;
+    private static String baseUrl;
+
+    @BeforeAll
+    public static void beforeAll() throws IOException {
+        mockServer = new MockWebServer();
+        baseUrl = mockServer.url("/").toString();
+        MockResponse mockResponse = new MockResponse().setBody(readResourceFile("fixtures/test.html"));
+        mockServer.enqueue(mockResponse);
+    }
 
     @BeforeEach
     public final void setUp() throws Exception {
         app = App.getApp();
+    }
+
+    @AfterAll
+    public static void afterAll() throws IOException {
+        mockServer.shutdown();
     }
 
     @Test
@@ -34,6 +57,7 @@ public class AppTest {
             assertThat(response.body().string()).contains("Анализатор страниц");
         });
     }
+
     @Test
     public void testUrlsPage() {
         JavalinTest.test(app, (server, client) -> {
@@ -47,17 +71,17 @@ public class AppTest {
         String input = "https://www.google.com";
         var url = new Url(input);
         url.setCreatedAt(new Timestamp(new Date(2024 / 9 / 21).getTime()));
-        UrlsRepository.save(url);
+        UrlRepository.save(url);
 
         JavalinTest.test(app, (server, client) -> {
-            assertTrue(UrlsRepository.find(url.getId()).isPresent());
+            assertTrue(UrlRepository.find(url.getId()).isPresent());
 
             var response = client.get(NamedRoutes.urlPath(url.getId()));
 
             assertThat(response.code()).isEqualTo(200);
             assertThat(Objects.requireNonNull(response.body()).string()).contains(input);
-            assertEquals(UrlsRepository.find(url.getId()).orElseThrow().getName(), input);
-            assertEquals(UrlsRepository.findByName(input).orElseThrow().getName(), input);
+            assertEquals(UrlRepository.find(url.getId()).orElseThrow().getName(), input);
+            assertEquals(UrlRepository.findByName(input).orElseThrow().getName(), input);
         });
     }
 
@@ -70,6 +94,7 @@ public class AppTest {
             assertThat(response.body().string()).contains("https://www.google.com");
         });
     }
+
     @Test
     void testUrlNotFound() {
         var id = 999999;
@@ -79,4 +104,24 @@ public class AppTest {
         });
     }
 
+    @Test
+    void testUrlCheck() throws SQLException {
+
+        Url url = new Url(baseUrl);
+        UrlRepository.save(url);
+
+        JavalinTest.test(app, (server, client) -> {
+            try (var response = client.post(NamedRoutes.urlChecksPath(url.getId()))) {
+                assertThat(response.code()).isEqualTo(200);
+
+                var check = UrlCheckRepository.find(url.getId()).orElseThrow();
+
+                assertThat(check.getTitle()).isEqualTo("Тест");
+                assertThat(check.getH1()).isEqualTo("Анализатор страниц");
+                assertThat(check.getDescription()).isEqualTo("");
+            } catch (final Exception th) {
+                System.out.println(th.getMessage());
+            }
+        });
+    }
 }
