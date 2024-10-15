@@ -71,4 +71,10 @@ public class UrlsController {
         }
         ctx.redirect(NamedRoutes.urlsPath());
     }
+    public static void delete(Context ctx) {
+        var id = ctx.pathParamAsClass("id", Long.class).get();
+        UrlRepository.delete(id);
+        ctx.redirect(NamedRoutes.urlsPath());
+    }
+
 }
