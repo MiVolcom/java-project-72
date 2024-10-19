@@ -1,6 +1,5 @@
 package hexlet.code.controller;
 
-import hexlet.code.dto.BasePage;
 import hexlet.code.dto.UrlPage;
 import hexlet.code.dto.UrlsPage;
 import hexlet.code.model.Url;
@@ -9,14 +8,13 @@ import hexlet.code.repository.UrlRepository;
 import hexlet.code.util.NamedRoutes;
 import hexlet.code.repository.UrlCheckRepository;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
@@ -39,32 +37,41 @@ public class UrlsController {
         ctx.render("jte/url/show.jte", model("page", page));
     }
 
-    public static void create(Context ctx) throws URISyntaxException, SQLException {
-        var inputUrl = ctx.formParamAsClass("url", String.class).get();
-        URI parsedUrl;
+    public static void create(Context ctx) throws SQLException {
+        var inputUrl = ctx.formParam("url");
+        URL parsedUrl;
         try {
-            parsedUrl = new URI(inputUrl);
-            if (Objects.equals(parsedUrl.getScheme(), null) || Objects.equals(parsedUrl.getAuthority(), null)) {
-                throw new URISyntaxException(parsedUrl.toString(), "Некорректный URL");
-            }
-        } catch (URISyntaxException e) {
-            var page = new BasePage("Некорректный URL", "danger");
-            ctx.status(400);
-            ctx.render("jte/index.jte", Collections.singletonMap("page", page));
+            var uri = new URI(inputUrl);
+            parsedUrl = uri.toURL();
+        } catch (Exception e) {
+            ctx.sessionAttribute("flash", "Некорректный URL");
+            ctx.sessionAttribute("flashType", "danger");
+            ctx.redirect(NamedRoutes.rootPath());
             return;
         }
-        var name = parsedUrl.getScheme() + "://" + parsedUrl.getAuthority();
-        Url newUrl = new Url(name);
-        Url url = UrlRepository.findByName(name).orElse(null);
+
+        String normalizedUrl = String
+                .format(
+                        "%s://%s%s",
+                        parsedUrl.getProtocol(),
+                        parsedUrl.getHost(),
+                        parsedUrl.getPort() == -1 ? "" : ":" + parsedUrl.getPort()
+                )
+                .toLowerCase();
+
+        Url url = UrlRepository.findByName(normalizedUrl).orElse(null);
+
         if (url != null) {
             ctx.sessionAttribute("flash", "Страница уже существует");
-            ctx.sessionAttribute("flashType", "warning");
+            ctx.sessionAttribute("flashType", "info");
         } else {
+            Url newUrl = new Url(normalizedUrl);
             UrlRepository.save(newUrl);
             ctx.sessionAttribute("flash", "Страница успешно добавлена");
             ctx.sessionAttribute("flashType", "success");
         }
-        ctx.redirect(NamedRoutes.urlsPath());
+
+        ctx.redirect("/urls", HttpStatus.forStatus(302));
     }
 
     public static void delete(Context ctx) {
