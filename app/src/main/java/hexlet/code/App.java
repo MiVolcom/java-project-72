@@ -27,6 +27,9 @@ public class App {
     }
     private static String getDatabaseUrl() {
         String jdbcUrl = System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project");
+        if(jdbcUrl==null) {
+            throw new IllegalStateException("JDBC_DATABASE_URL environment variable is not set");
+        }
         log.info(jdbcUrl);
         return jdbcUrl;
     }
