@@ -44,11 +44,6 @@ public class App {
         return templateEngine;
     }
 
-    public static void main(String[] args) throws IOException, SQLException {
-        var app = getApp();
-        app.start(getPort());
-    }
-
     public static Javalin getApp() throws IOException, SQLException {
         var hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(getDatabaseUrl());
@@ -81,5 +76,9 @@ public class App {
         app.delete(NamedRoutes.urlPath("{id}"), UrlsController::delete);
 
         return app;
+    }
+    public static void main(String[] args) throws IOException, SQLException {
+        var app = getApp();
+        app.start(getPort());
     }
 }
