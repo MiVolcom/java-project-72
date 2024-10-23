@@ -11,6 +11,11 @@
 
 **Page Analyzer – сайт, который анализирует указанные страницы на SEO пригодность.**
 
+![img.png](img.png)
+
+![img_1.png](img_1.png)
+
+
 **Demo:** https://java-project-72-3wr7.onrender.com
 
 **Usage**
