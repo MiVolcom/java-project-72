@@ -4,8 +4,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 app/jte-classes
-img.png
-img_1.png
+*.png\n*
 
 ### IntelliJ IDEA ###
 .idea
