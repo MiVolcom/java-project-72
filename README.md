@@ -9,4 +9,14 @@
 ###### Фронтенд (Bootstrap, CDN). Фреймворк Javalin (Маршрутизация, Представление). База данных (JDBC). Деплой (PaaS). HTTP (в том числе выполнение запросов). Интеграционное тестирование. Использование библиотек MockWebServer, Unirest.
 
 
-Page Analyzer – сайт, который анализирует указанные страницы на SEO пригодность.
+**Page Analyzer – сайт, который анализирует указанные страницы на SEO пригодность.**
+
+**Demo:** https://java-project-72-3wr7.onrender.com
+
+**Usage**
+```copy
+make install
+make run
+```
+
+Open in browser: http://localhost:7070
