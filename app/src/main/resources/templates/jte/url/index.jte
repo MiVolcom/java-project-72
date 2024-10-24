@@ -1,6 +1,7 @@
 @import hexlet.code.dto.UrlsPage
 @import hexlet.code.repository.UrlCheckRepository
 @import hexlet.code.util.NamedRoutes
+@import java.time.ZoneId
 @import java.time.format.DateTimeFormatter
 @param UrlsPage page
 
@@ -33,8 +34,9 @@ content = @`
                         !{var checks = UrlCheckRepository.getChecksById(url.getId());}
                         ${!checks.isEmpty() ?
                                     checks.get(checks.size() - 1)
-                                    .getCreatedAt().toLocalDateTime()
-                                   .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : ""}
+                                    .getCreatedAt()
+                                    .atZone(ZoneId.systemDefault())
+                                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : ""}
                     </td>
                     <td>
                         ${!checks.isEmpty() ?

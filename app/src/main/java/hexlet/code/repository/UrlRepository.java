@@ -5,25 +5,25 @@ import hexlet.code.model.Url;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 public class UrlRepository extends BaseRepository {
     public static void save(Url url) throws SQLException {
         String sql = "INSERT INTO urls (name, created_at) VALUES (?, ?)";
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, url.getName());
-            var createdAt = LocalDateTime.now();
-            preparedStatement.setTimestamp(2, Timestamp.valueOf(createdAt));
+            var createdAt = Instant.now();
+            preparedStatement.setTimestamp(2, Timestamp.from(createdAt));
 
             preparedStatement.executeUpdate();
             var generatedKeys = preparedStatement.getGeneratedKeys();
-            // Устанавливаем ID в сохраненную сущность
             if (generatedKeys.next()) {
                 url.setId(generatedKeys.getLong(1));
-                url.setCreatedAt(Timestamp.valueOf(createdAt));
+                url.setCreatedAt(createdAt);
             } else {
                 throw new SQLException("DB have not returned an id after saving an entity");
             }
@@ -37,7 +37,8 @@ public class UrlRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 var name = resultSet.getString("name");
-                var createdAt = resultSet.getTimestamp("created_at");
+                var timestamp = resultSet.getTimestamp("created_at");
+                Instant createdAt = timestamp != null ? timestamp.toInstant() : null;
 
                 var url = new Url(name);
                 url.setId(id);
@@ -56,7 +57,8 @@ public class UrlRepository extends BaseRepository {
             while (resultSet.next()) {
                 var id = resultSet.getLong("id");
                 var name = resultSet.getString("name");
-                var createdAt = resultSet.getTimestamp("created_at");
+                var timestamp = resultSet.getTimestamp("created_at");
+                Instant createdAt = timestamp != null ? timestamp.toInstant() : null;
 
                 var url = new Url(name);
                 url.setId(id);
@@ -74,7 +76,8 @@ public class UrlRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 var name = resultSet.getString("name");
-                var createdAt = resultSet.getTimestamp("created_at");
+                var timestamp = resultSet.getTimestamp("created_at");
+                Instant createdAt = timestamp != null ? timestamp.toInstant() : null;
                 var id = resultSet.getLong("id");
                 var url = new Url(name);
                 url.setId(id);
@@ -96,7 +99,7 @@ public class UrlRepository extends BaseRepository {
             if (result > 0) {
                 System.out.println("Url with ID " + id + " has been successfully deleted.");
             } else {
-                System.out.println("Url with ID = " + id + " not found.");
+                throw new SQLException("Url with ID = " + id + " not found.");
             }
 
         } catch (SQLException e) {

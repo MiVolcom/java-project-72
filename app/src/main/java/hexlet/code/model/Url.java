@@ -2,8 +2,8 @@ package hexlet.code.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import java.time.Instant;
 
-import java.sql.Timestamp;
 
 @Getter
 @ToString
@@ -13,7 +13,7 @@ public final class Url {
     @ToString.Include
     private String name;
     @Setter
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     public Url(String name) {
         this.name = name;

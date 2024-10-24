@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -16,7 +16,7 @@ public class UrlCheck {
     private String title;
     private String h1;
     private String description;
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     public UrlCheck(long urlId, int statusCode, String title, String h1, String description) {
         this.urlId = urlId;

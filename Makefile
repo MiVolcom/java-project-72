@@ -15,5 +15,3 @@ report:
 
 lint:
 	make -C app lint
-
-.PHONY: build

@@ -1,4 +1,5 @@
 @import hexlet.code.dto.UrlPage
+@import java.time.ZoneId
 @import java.time.format.DateTimeFormatter
 @import hexlet.code.util.NamedRoutes
 @param UrlPage page
@@ -21,7 +22,10 @@ content = @`
                 </tr>
                 <tr>
                     <td>Дата создания</td>
-                    <td>${page.getUrl().getCreatedAt().toLocalDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))}</td>
+                    <td>${page.getUrl().getCreatedAt()
+                            .atZone(ZoneId.systemDefault())
+                            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))}
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -64,7 +68,9 @@ content = @`
                             ${check.getDescription()}
                         </td>
                         <td>
-                            ${check.getCreatedAt().toLocalDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))}
+                            ${check.getCreatedAt()
+                                .atZone(ZoneId.systemDefault())
+                                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))}
                         </td>
                     </tr>
                 @endfor

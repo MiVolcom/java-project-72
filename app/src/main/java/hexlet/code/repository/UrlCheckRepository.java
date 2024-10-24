@@ -5,7 +5,7 @@ import hexlet.code.model.UrlCheck;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,9 +24,9 @@ public class UrlCheckRepository {
             stmt.setString(3, urlCheck.getTitle());
             stmt.setString(4, urlCheck.getH1());
             stmt.setString(5, urlCheck.getDescription());
-            var createdAt = Timestamp.valueOf(LocalDateTime.now());
+            var createdAt = Instant.now();
 
-            stmt.setTimestamp(6, createdAt);
+            stmt.setTimestamp(6, Timestamp.from(createdAt));
 
             stmt.executeUpdate();
 
@@ -58,7 +58,8 @@ public class UrlCheckRepository {
                 var title = resultSet.getString("title");
                 var h1 = resultSet.getString("h1");
                 var description = resultSet.getString("description");
-                var createdAt = resultSet.getTimestamp("created_at");
+                var timestamp = resultSet.getTimestamp("created_at");
+                Instant createdAt = timestamp != null ? timestamp.toInstant() : null;
 
                 var urlCheck = new UrlCheck(urlId, statusCode, title, h1, description);
                 urlCheck.setId(id);
@@ -84,7 +85,8 @@ public class UrlCheckRepository {
                 var title = resultSet.getString("title");
                 var h1 = resultSet.getString("h1");
                 var description = resultSet.getString("description");
-                var createdAt = resultSet.getTimestamp("created_at");
+                var timestamp = resultSet.getTimestamp("created_at");
+                Instant createdAt = timestamp != null ? timestamp.toInstant() : null;
 
                 var urlCheck = new UrlCheck(urlId, statusCode, title, h1, description);
                 urlCheck.setId(id);
