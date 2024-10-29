@@ -114,17 +114,13 @@ public class AppTest {
         UrlRepository.save(url);
 
         JavalinTest.test(app, (server, client) -> {
-            try (var response = client.post(NamedRoutes.urlChecksPath(url.getId()))) {
-                assertThat(response.code()).isEqualTo(200);
+            var response = client.post(NamedRoutes.urlChecksPath(url.getId()));
+            assertThat(response.code()).isEqualTo(200);
+            var check = UrlCheckRepository.find(url.getId()).orElseThrow();
 
-                var check = UrlCheckRepository.find(url.getId()).orElseThrow();
-
-                assertThat(check.getTitle()).isEqualTo("Тест");
-                assertThat(check.getH1()).isEqualTo("Анализатор страниц");
-                assertThat(check.getDescription()).isEqualTo("");
-            } catch (final Exception th) {
-                System.out.println(th.getMessage());
-            }
+            assertThat(check.getTitle()).isEqualTo("Тест");
+            assertThat(check.getH1()).isEqualTo("Анализатор страниц");
+            assertThat(check.getDescription()).isEqualTo("");
         });
     }
 }

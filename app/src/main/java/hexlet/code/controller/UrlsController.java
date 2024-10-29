@@ -23,7 +23,8 @@ import static io.javalin.rendering.template.TemplateUtil.model;
 public class UrlsController {
     public static void index(Context ctx) throws SQLException {
         var urls = UrlRepository.getEntities();
-        var page = new UrlsPage(urls);
+        var checks = UrlCheckRepository.findLatestChecks();
+        var page = new UrlsPage(urls, checks);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
         page.setFlashType(ctx.consumeSessionAttribute("flashType"));
         ctx.render("jte/url/index.jte", model("page", page));

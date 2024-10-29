@@ -1,6 +1,7 @@
 package hexlet.code.repository;
 
 import hexlet.code.model.Url;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class UrlRepository extends BaseRepository {
     public static void save(Url url) throws SQLException {
         String sql = "INSERT INTO urls (name, created_at) VALUES (?, ?)";
@@ -97,7 +99,7 @@ public class UrlRepository extends BaseRepository {
             int result = stmt.executeUpdate();
 
             if (result > 0) {
-                System.out.println("Url with ID " + id + " has been successfully deleted.");
+                log.info("Url with ID " + id + " has been successfully deleted.");
             } else {
                 throw new SQLException("Url with ID = " + id + " not found.");
             }

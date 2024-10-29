@@ -31,17 +31,18 @@ content = @`
                         <a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a>
                     </td>
                     <td>
-                        !{var checks = UrlCheckRepository.getChecksById(url.getId());}
-                        ${!checks.isEmpty() ?
-                                    checks.get(checks.size() - 1)
-                                    .getCreatedAt()
-                                    .atZone(ZoneId.systemDefault())
-                                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : ""}
+                        ${page.getChecks().isEmpty() || page.getChecks().get(url.getId()) == null ? "" : page.getChecks()
+                            .get(url.getId())
+                            .getCreatedAt()
+                            .atZone(ZoneId.systemDefault())
+                            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                            .toString()}
                     </td>
                     <td>
-                        ${!checks.isEmpty() ?
-                                    checks.get(checks.size() - 1)
-                                    .getStatusCode() : null}
+                        ${page.getChecks().isEmpty() || page.getChecks().get(url.getId()) == null ? "" : page.getChecks()
+                            .get(url.getId())
+                            .getStatusCode()
+                            .toString()}
                     </td>
                 </tr>
             @endfor
